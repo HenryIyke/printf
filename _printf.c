@@ -13,8 +13,8 @@
 
 int _printf(const char *format, ...)
 {
-	int characterCount = 0; 
-	long unsigned int i = 0;
+	int characterCount = 0;
+	int i = 0;
 	char *print_string;
 	va_list ptr;
 
