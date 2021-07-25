@@ -27,12 +27,13 @@ int _printf(const char *format, ...)
 			{
 				case 'c':
 					_putchar(va_arg(ptr, int));
+					format++;
 					characterCount++;
 					break;
 				case 's':
 					print_string = va_arg(ptr, char *);
 					for (i = 0; print_string[i] != '\0'; i++)
-						_putchar(*print_string);
+						_putchar(print_string[i]);
 					format++;
 					characterCount += strlen(print_string);
 					break;
