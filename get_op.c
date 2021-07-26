@@ -3,28 +3,34 @@
 #include <stdio.h>
 #include <string.h>
 
+/**
+ * get_op - prints to standard output
+ * @s: Character for formatting
+ * @args: Character for formatting
+ * Return: This determines the success or failure of the function.
+ */
 
 
 int get_op(const char s, void *args)
 {
-	printer_t funcs[] = {
-		{"c", print_char},
-		{"s", print_string},			
-		{"%", print_percent},
-       		{NULL, NULL}
-	  };
+printer_t funcs[] = {
+{"c", print_char},
+{"s", print_string},
+{"%", print_percent},
+{NULL, NULL}
+};
 
-	int i;
+int i;
+i = 0;
 
-	i = 0;
-	while (funcs[i].symbol != NULL)
+while (funcs[i].symbol != NULL)
 {
-	if ((s) == (*(funcs + i) -> symbol))
-	{
-		(funcs[i].print(args));
-		break;
-	}
-	i++;
+if ((s) == (*(funcs + i)->symbol))
+{
+(funcs[i].print(args));
+return (1);
+}
+i++;
 }
 return (0);
 }
