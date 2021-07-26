@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdarg.h>
 #include <string.h>
+#include <stdlib.h>
 
 /**
  * _printf - prints to standard output
@@ -10,12 +11,17 @@
  * Return: Number of characters printed out
  */
 
+
+
 int _printf(const char *format, ...)
 {
 	int characterCount = 0;
 	va_list args;
 	/*void (*f)(va_list arg);*/
 	(void) format;
+	int i = 0;
+	char *print_string;
+	va_list ptr;
 
 	va_start(args, format);
 	while (*format)
