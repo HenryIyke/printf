@@ -12,53 +12,34 @@
 
 int _printf(const char *format, ...)
 {
-	int characterCount = 0; 
-	long unsigned int i = 0;
-	char *print_string;
-	va_list ptr;
+	int characterCount = 0;
+	va_list args;
+	/*void (*f)(va_list arg);*/
+	(void) format;
 
-	va_start(ptr, format);
+	va_start(args, format);
 	while (*format)
 	{
 		if (*format == '%')
 		{
 			format++;
-			switch (*format)
+			get_op(*format, args);
+			format++;
+			if (get_op(*format, args) != 0)
 			{
-				case 'c':
-					_putchar(va_arg(ptr, int));
-					format++;
-					characterCount++;
-					break;
-				case 's':
-					print_string = va_arg(ptr, char *);
-					for (i = 0; print_string[i] != '\0'; i++)
-						_putchar(print_string[i]);
-					format++;
-					characterCount += strlen(print_string);
-					break;
-				case '%':
-					_putchar('%');
-					format++;
-					characterCount++;
-					break;
-				case '\0':
-					break;
-				default:
-					_putchar('%');
-					_putchar(*format);
-					format++;
-					characterCount += 2;
+				_putchar('%');
+				_putchar(*format);
+				format++;
+				/*characterCount += 2;*/
 			}
 		}
 		else
 		{
-			_putchar(*format);
-			format++;
-			characterCount++;
-		}
+		_putchar(*format);
+		format++;
+		characterCount++;											}
 	}
-	va_end(ptr);
+	va_end(args);
 
 	return (characterCount);
 }
