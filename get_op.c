@@ -19,10 +19,10 @@ int get_op(const char s, void *args)
 	i = 0;
 	while (funcs[i].symbol != NULL)
 {
-	if ((s) == (*(funcs + i) -> symbol))
+	if ((s) == (*(funcs + i)->symbol))
 	{
 		(funcs[i].print(args));
-		break;
+		return (1);
 	}
 	i++;
 }

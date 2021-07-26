@@ -19,9 +19,6 @@ int _printf(const char *format, ...)
 	va_list args;
 	/*void (*f)(va_list arg);*/
 	(void) format;
-	int i = 0;
-	char *print_string;
-	va_list ptr;
 
 	va_start(args, format);
 	while (*format)
@@ -29,15 +26,14 @@ int _printf(const char *format, ...)
 		if (*format == '%')
 		{
 			format++;
-			get_op(*format, args);
-			format++;
-			if (get_op(*format, args) != 0)
+			/*get_op(*format, args);*/
+			if (get_op(*format, &args) == 0)
 			{
 				_putchar('%');
 				_putchar(*format);
-				format++;
 				/*characterCount += 2;*/
 			}
+			format++;
 		}
 		else
 		{

@@ -12,7 +12,7 @@
 typedef struct printer
 {
 		char *symbol;
-		void (*print)(va_list arg);
+		void (*print)(va_list *arg);
 
 } printer_t;
 
@@ -21,10 +21,10 @@ typedef struct printer
 
 int _putchar(char);
 int _printf(const char *format, ...);
-void print_char(va_list arg);
-void print_string(va_list arg);
-void print_percent(va_list arg);
-void print_break(va_list arg);
+void print_char(va_list *arg);
+void print_string(va_list *arg);
+void print_percent(va_list *arg);
+void print_break(va_list *arg);
 int get_op(const char s, void *args);
 
 #endif
