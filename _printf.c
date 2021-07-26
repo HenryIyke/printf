@@ -11,6 +11,8 @@
  * Return: Number of characters printed out
  */
 
+
+
 int _printf(const char *format, ...)
 {
 	int characterCount = 0;
