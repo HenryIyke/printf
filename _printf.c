@@ -11,41 +11,33 @@
  * Return: Number of characters printed out
  */
 
-
-
 int _printf(const char *format, ...)
 {
-	int characterCount = 0;
-	va_list args;
-	/*void (*f)(va_list arg);*/
-	(void) format;
-	int i = 0;
-	char *print_string;
-	va_list ptr;
+int characterCount = 0;
+va_list args;
+(void) format;
+va_start(args, format);
 
-	va_start(args, format);
-	while (*format)
-	{
-		if (*format == '%')
-		{
-			format++;
-			get_op(*format, args);
-			format++;
-			if (get_op(*format, args) != 0)
-			{
-				_putchar('%');
-				_putchar(*format);
-				format++;
-				/*characterCount += 2;*/
-			}
-		}
-		else
-		{
-		_putchar(*format);
-		format++;
-		characterCount++;											}
-	}
-	va_end(args);
-
-	return (characterCount);
+while (*format)
+{
+if (*format == '%')
+{
+format++;
+if (get_op(*format, &args) == 0)
+{
+_putchar('%');
+_putchar(*format);
+characterCount += 2;
+}
+format++;
+}
+else
+{
+_putchar(*format);
+format++;
+characterCount++;
+}
+}
+va_end(args);
+return (characterCount);
 }
