@@ -20,10 +20,12 @@ void (*print)(va_list *arg);
 
 int _putchar(char);
 int _printf(const char *format, ...);
-void print_char(va_list *arg);
-void print_string(va_list *arg);
-void print_percent(va_list *arg);
-void print_break(va_list *arg);
+void print_char(va_list *argargs);
+void print_string(va_list *argargs);
+void print_percent(va_list *argargs);
+void print_break(va_list *argargs);
 int get_op(const char s, void *args);
+void print_decimal(va_list *argargs);
+void print_integer(va_list *argargs);
 
 #endif
