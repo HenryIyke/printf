@@ -48,22 +48,22 @@
  */
 struct format_info
 {
-  int prec;
-  int width;
-  char spec;
-  char is_long_double;
-  char is_long;
-  char is_long_long;
-  char is_short;
-  char is_char;
-  char is_precision_set;
-  char is_width_set;
-  char alt;
-  char space;
-  char left;
-  char show_sign;
-  char group;
-  char pad;
+int prec;
+int width;
+char spec;
+char is_long_double;
+char is_long;
+char is_long_long;
+char is_short;
+char is_char;
+char is_precision_set;
+char is_width_set;
+char alt;
+char space;
+char left;
+char show_sign;
+char group;
+char pad;
 };
 typedef struct format_info fmt_info_t;
 /**
@@ -74,8 +74,8 @@ typedef struct format_info fmt_info_t;
  */
 struct spec_printer
 {
-  char spec;
-  int (*print_arg)(va_list *args, fmt_info_t *fmt_info);
+char spec;
+int (*print_arg)(va_list *args, fmt_info_t *fmt_info);
 };
 typedef struct spec_printer spec_printer_t;
 typedef unsigned char uchar_t;
@@ -89,9 +89,9 @@ typedef unsigned short ushort_t;
  */
 struct float_info
 {
-  char sign;
-  char *exponent;
-  char *mantissa;
+char sign;
+char *exponent;
+char *mantissa;
 };
 typedef struct float_info float_info_t;
 
@@ -113,7 +113,7 @@ int set_number(const char *str, int *number);
 void set_length(char cur, char nxt, fmt_info_t *fmt_info);
 void set_flags(char cur, fmt_info_t *fmt_info);
 void set_precision(const char *str, va_list args,
-		   fmt_info_t *fmt_info, int *i, int *error_status);
+fmt_info_t *fmt_info, int *i, int *error_status);
 int read_format_info(const char *, va_list, fmt_info_t *);
 
 
@@ -173,8 +173,8 @@ char *u_long_to_str(unsigned long num);
 char *long_to_str(long num);
 char *is_invalid(float_info_t *flt_info);
 
-void set_float_parts(double num,uchar_t exponent_size,
-		     uchar_t mantissa_size, float_info_t *float_info);
+void set_float_parts(double num, uchar_t exponent_size,
+uchar_t mantissa_size, float_info_t *float_info);
 char *mantissa_to_dec_fraction(char *mantissa, unsigned short frac_len);
 char *float_to_str(float_info_t *flt_info, char can_free);
 
