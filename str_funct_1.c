@@ -1,6 +1,8 @@
+#include <stdio.h>
+#include <stdarg.h>
 #include <stdlib.h>
+#include <string.h>
 #include "holberton.h"
-
 /**
  * append_char - Adds multiple copies of a given character to the
  * \ end of a string
@@ -13,20 +15,20 @@
  */
 char *append_char(char *str, char c, int n, char can_free)
 {
-  int i, size;
-  char *new_str;
+int i, size;
+char *new_str;
 
-  size = str ? str_len(str) : 0;
-  new_str = malloc(sizeof(char) * (size + n + 1));
-  if (new_str)
-    {
-      for (i = 0; i < (size + n); i++)
-	new_str[i] = i < size ? str[i] : c;
-      new_str[i] = '\0';
-    }
-  if (can_free)
-    free(str);
-  return (new_str);
+size = str ? str_len(str) : 0;
+new_str = malloc(sizeof(char) * (size + n + 1));
+if (new_str)
+{
+for (i = 0; i < (size + n); i++)
+new_str[i] = i < size ? str[i] : c;
+new_str[i] = '\0';
+}
+if (can_free)
+free(str);
+return (new_str);
 }
 
 /**
@@ -39,22 +41,22 @@ char *append_char(char *str, char c, int n, char can_free)
  */
 char *delete_char(char *str, char c, char can_free)
 {
-  char *new_str;
-  int len = str_len(str), i;
+char *new_str;
+int len = str_len(str), i;
 
-  new_str = malloc(sizeof(char) * (len - count_char(str, c) + 1));
-  if (new_str)
-    {
-      for (i = 0, len = 0; *(str + i) != '\0'; i++)
-	{
-	  if (*(str + i) != c)
-	    *(new_str + len++) = *(str + i);
-	}
-      *(new_str + len) = '\0';
-    }
-  if (can_free)
-    free(str);
-  return (new_str);
+new_str = malloc(sizeof(char) * (len - count_char(str, c) + 1));
+if (new_str)
+{
+for (i = 0, len = 0; *(str + i) != '\0'; i++)
+{
+if (*(str + i) != c)
+*(new_str + len++) = *(str + i);
+}
+*(new_str + len) = '\0';
+}
+if (can_free)
+free(str);
+return (new_str);
 }
 
 /**
@@ -68,25 +70,25 @@ char *delete_char(char *str, char c, char can_free)
  */
 char *insert_char(char *str, int pos, char c, char can_free)
 {
-  char *new_str;
-  int i, j, len;
+char *new_str;
+int i, j, len;
 
-  len = str_len(str);
-  new_str = malloc(sizeof(char) * (len + 2));
-  if (new_str)
-    {
-      for (i = 0, j = 0; i < len; i++)
-	{
-	  if (i == pos)
-	    *(new_str + j++) = c;
-	  *(new_str + j) = *(str + i);
-	  j++;
-	}
-      *(new_str + len + 1) = '\0';
-      if (can_free)
-	free(str);
-    }
-  return (new_str);
+len = str_len(str);
+new_str = malloc(sizeof(char) * (len + 2));
+if (new_str)
+{
+for (i = 0, j = 0; i < len; i++)
+{
+if (i == pos)
+*(new_str + j++) = c;
+*(new_str + j) = *(str + i);
+j++;
+}
+*(new_str + len + 1) = '\0';
+if (can_free)
+free(str);
+}
+return (new_str);
 }
 
 /**
@@ -98,11 +100,11 @@ char *insert_char(char *str, int pos, char c, char can_free)
  */
 int count_char(char *str, char c)
 {
-  int count = 0, i;
+int count = 0, i;
 
-  for (i = 0; *(str + i) != '\0'; i++)
-    count += *(str + i) == c ? 1 : 0;
-  return (count);
+for (i = 0; *(str + i) != '\0'; i++)
+count += *(str + i) == c ? 1 : 0;
+return (count);
 }
 
 /**
@@ -115,24 +117,24 @@ int count_char(char *str, char c)
  */
 char *str_cat(char *left, char *right, char can_free)
 {
-  int left_length = str_len(left);
-  int right_length = str_len(right);
-  int i;
-  char *str;
+int left_length = str_len(left);
+int right_length = str_len(right);
+int i;
+char *str;
 
-  str = malloc(sizeof(char) * (left_length + right_length + 1));
-  if (str)
-    {
-      for (i = 0; *(left + i) != '\0'; i++)
-	*(str + i) = *(left + i);
-      for (i = 0; *(right + i) != '\0'; i++)
-	*(str + left_length + i) = *(right + i);
-      *(str + left_length + i) = '\0';
-    }
-  if (can_free)
-    {
-      free(left);
-      free(right);
-    }
-  return (str);
+str = malloc(sizeof(char) * (left_length + right_length + 1));
+if (str)
+{
+for (i = 0; *(left + i) != '\0'; i++)
+*(str + i) = *(left + i);
+for (i = 0; *(right + i) != '\0'; i++)
+*(str + left_length + i) = *(right + i);
+*(str + left_length + i) = '\0';
+}
+if (can_free)
+{
+free(left);
+free(right);
+}
+return (str);
 }
