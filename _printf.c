@@ -20,6 +20,8 @@ va_list args;
 
 va_start(args, format);
 write_to_buffer(0, -1);
+if (!format || (format[0] == '%' && format[1] == '\0'))
+return (-1);
 for (i = 0; format && *(format + i) != '\0'; i++)
 {
 if (processing_escape)
