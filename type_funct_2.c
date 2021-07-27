@@ -5,7 +5,7 @@
 #include "holberton.h"
 /**
  * set_float_parts - Sets the float_info fields to the appropriate
- * \ parts of a given float
+ * \  parts of a given float
  * @num: The given float
  * @exponent_size: The number of bits in the exponent part
  * @mantissa_size: The number of bits in the mantissa part
@@ -14,6 +14,7 @@
 void set_float_parts(double num, uchar_t exponent_size,
 uchar_t mantissa_size, float_info_t *float_info)
 {
+
 int i;
 char *str;
 uchar_t size = exponent_size + mantissa_size + 1;
