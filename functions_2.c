@@ -26,7 +26,8 @@ else
 num = va_arg(*args_list, int);
 str = long_to_str(num);
 len = num < 0 || (num >= 0 && (fmt_info->show_sign || fmt_info->space))
-? 1 : 0;
+? 1
+: 0;
 if (str)
 {
 len += str_len(str);
