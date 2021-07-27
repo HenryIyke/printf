@@ -7,6 +7,8 @@
  * init_format_info - initializes a format info struct
  * @spec: The format info to initialize
  */
+
+
 void init_format_info(fmt_info_t *spec)
 {
 if (spec)
