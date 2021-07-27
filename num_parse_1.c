@@ -12,6 +12,7 @@
  */
 int set_number(const char *str, int *number)
 {
+
 char digits[11] = {0};
 int i, j = 0;
 
