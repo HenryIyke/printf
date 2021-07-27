@@ -47,6 +47,11 @@ processing_escape = TRUE;
 else
 _putchar(*(format + i)), char_count++;
 }
+if (format[i] != ' ')
+{
+_putchar('%');
+_putchar(*format);
+}
 }
 write_to_buffer(0, 1);
 va_end(args);
