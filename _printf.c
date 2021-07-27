@@ -109,6 +109,7 @@ out = _putchar(*(str + i));
 return (out);
 }
 
+
 /**
  * write_to_buffer - Writes a char to the buffer based on an action code
  * @c: The character to write
@@ -143,4 +144,16 @@ i = 0;
 mem_set(buffer, 1024, 0);
 }
 return (out);
+}
+
+/**
+ * _putchar - writes the character c to the buffer
+ * @c: The character to print
+ *
+ * Return: On success 1.
+ * On error, -1 is returned, and errno is set appropriately.
+ */
+int _putchar(char c)
+{
+return (write_to_buffer(c, 0));
 }
