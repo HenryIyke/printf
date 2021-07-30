@@ -1,8 +1,5 @@
-#include <stdio.h>
-#include <stdarg.h>
-#include <stdlib.h>
-#include <string.h>
 #include "holberton.h"
+
 /**
  * is_digit - Checks if the given character is a digit character
  * @c: The character to check
@@ -11,7 +8,7 @@
  */
 char is_digit(char c)
 {
-return (c >= '0' && c <= '9' ? TRUE : FALSE);
+  return (c >= '0' && c <= '9' ? TRUE : FALSE);
 }
 
 /**
@@ -23,25 +20,25 @@ return (c >= '0' && c <= '9' ? TRUE : FALSE);
  */
 char is_non_custom_specifier(char c)
 {
-switch (c)
-{
-case '%':
-case 'c':
-case 'd':
-/* case 'F': */
-/* case 'f': */
-case 'i':
-case 'n':
-case 'o':
-case 'p':
-case 's':
-case 'u':
-case 'X':
-case 'x':
-return (TRUE);
-default:
-return (FALSE);
-}
+  switch (c)
+    {
+    case '%':
+    case 'c':
+    case 'd':
+      /* case 'F': */
+      /* case 'f': */
+    case 'i':
+    case 'n':
+    case 'o':
+    case 'p':
+    case 's':
+    case 'u':
+    case 'X':
+    case 'x':
+      return (TRUE);
+    default:
+      return (FALSE);
+    }
 }
 
 /**
@@ -53,23 +50,23 @@ return (FALSE);
  */
 char is_specifier(char c)
 {
-if (is_non_custom_specifier(c))
-{
-return (TRUE);
-}
-else
-{
-switch (c)
-{
-case 'b':
-case 'R':
-case 'r':
-case 'S':
-return (TRUE);
-default:
-return (FALSE);
-}
-}
+  if (is_non_custom_specifier(c))
+    {
+      return (TRUE);
+    }
+  else
+    {
+      switch (c)
+	{
+	case 'b':
+	case 'R':
+	case 'r':
+	case 'S':
+	  return (TRUE);
+	default:
+	  return (FALSE);
+	}
+    }
 }
 
 /**
@@ -80,18 +77,18 @@ return (FALSE);
  */
 char is_flag(char c)
 {
-switch (c)
-{
-case '-':
-case '+':
-case '\'':
-case ' ':
-case '#':
-case '0':
-return (TRUE);
-default:
-return (FALSE);
-}
+  switch (c)
+    {
+    case '-':
+    case '+':
+    case '\'':
+    case ' ':
+    case '#':
+    case '0':
+      return (TRUE);
+    default:
+      return (FALSE);
+    }
 }
 
 /**
@@ -102,12 +99,12 @@ return (FALSE);
  */
 char is_length(char c)
 {
-switch (c)
-{
-case 'h':
-case 'l':
-return (TRUE);
-default:
-return (FALSE);
-}
+  switch (c)
+    {
+    case 'h':
+    case 'l':
+      return (TRUE);
+    default:
+      return (FALSE);
+    }
 }
