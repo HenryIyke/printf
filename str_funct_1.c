@@ -1,166 +1,140 @@
-#include <inttypes.h>
 #include <stdio.h>
+#include <stdarg.h>
 #include <stdlib.h>
+#include <string.h>
 #include "holberton.h"
-
 /**
- * u_long_to_str - Converts an unsigned long to its string representation
- * @num: The unsigned long integer
+ * append_char - Adds multiple copies of a given character to the
+ * \ end of a string
+ * @str: The string whose ending is to be trimmed
+ * @c: The character to add at the end of the string
+ * @n: The number of times the character should be added
+ * @can_free: Specifies if the given string can be freed
  *
- * Return: The string representation of the unsigned long integer
+ * Return: The new copy of the string, otherwise NULL
  */
-char *u_long_to_str(unsigned long num)
+char *append_char(char *str, char c, int n, char can_free)
 {
-  char *str;
-  unsigned long rem = num;
-  char size = 20, j;
+int i, size;
+char *new_str;
 
-  str = malloc(sizeof(char) * (size + 1));
-  if (str)
-    {
-      *(str + size) = '\0';
-      mem_set(str, size, '0');
-      j = size - 1;
-      while (rem > 0)
-	{
-	  *(str + j) = (rem % 10) + '0';
-	  rem /= 10;
-	  j--;
-	}
-      str = trim_start(str, '0', TRUE);
-      str = num == 0 ? str_cat("0", "", FALSE) : str;
-    }
-  return (str);
+size = str ? str_len(str) : 0;
+new_str = malloc(sizeof(char) * (size + n + 1));
+if (new_str)
+{
+for (i = 0; i < (size + n); i++)
+new_str[i] = i < size ? str[i] : c;
+new_str[i] = '\0';
+}
+if (can_free)
+free(str);
+return (new_str);
 }
 
 /**
- * long_to_str - Converts a long to its string representation
- * @num: The long integer
+ * delete_char - Removes copies of a given character from a string
+ * @str: The string containing the character
+ * @c: The character to remove from the string
+ * @can_free: Specifies if the given string can be freed
  *
- * Return: The string representation of the long integer
+ * Return: The new copy of the string, otherwise NULL
  */
-char *long_to_str(long num)
+char *delete_char(char *str, char c, char can_free)
 {
-  char *str;
-  long rem = num;
-  char sign = rem < 0 ? -1 : 1;
-  char size = 20, j;
+char *new_str;
+int len = str_len(str), i;
 
-  str = malloc(sizeof(char) * (size + 1));
-  if (str)
-    {
-      *(str + size) = '\0';
-      mem_set(str, size, '0');
-      j = size - 1;
-      if (rem == 0)
-	*(str + j) = '0';
-
-      while ((sign == -1 && rem < 0) || (sign == 1 && rem > 0))
-	{
-	  *(str + j) = (rem % 10) * sign + '0';
-	  rem /= 10;
-	  j--;
-	}
-      if (sign < 0)
-	*(str + j) = '-';
-      str = trim_start(str, '0', TRUE);
-      str = num == 0 ? str_cat("0", "", FALSE) : str;
-    }
-  return (str);
+new_str = malloc(sizeof(char) * (len - count_char(str, c) + 1));
+if (new_str)
+{
+for (i = 0, len = 0; *(str + i) != '\0'; i++)
+{
+if (*(str + i) != c)
+*(new_str + len++) = *(str + i);
+}
+*(new_str + len) = '\0';
+}
+if (can_free)
+free(str);
+return (new_str);
 }
 
 /**
- * ptr_to_str - Converts a pointer to its string representation
- * @ptr: The pointer
+ * insert_char - Inserts a character into a string
+ * @str: The source string
+ * @pos: The insertion position of the character
+ * @c: The character to insert into the string
+ * @can_free: Specifies if the given string can be freed
  *
- * Return: The string representation of the pointer
+ * Return: The trimmed copy, otherwise NULL
  */
-char *ptr_to_str(void *ptr)
+char *insert_char(char *str, int pos, char c, char can_free)
 {
-  int i, size;
-  uintptr_t tmp;
-  char *str, *str0;
+char *new_str;
+int i, j, len;
 
-  if (ptr)
-    {
-      tmp = (uintptr_t)ptr;
-      size = sizeof(ptr) * 2;
-      str = malloc(sizeof(char) * (size + 1));
-      if (str)
-	{
-	  str0 = malloc(sizeof(char) * (2 + 1));
-	  if (str0)
-	    {
-	      mem_set(str, size, '0');
-	      for (i = 0; i < size; i++)
-		{
-		  *(str + i) = (tmp % 16) < 10 ? (tmp % 16) + '0'
-		    : (tmp % 16) - 10 + 'a';
-		  tmp /= 16;
-		}
-	      *(str + i) = '\0';
-	      *(str0 + 0) = '0';
-	      *(str0 + 1) = 'x';
-	      *(str0 + 2) = '\0';
-	      rev_string(str);
-	      str = trim_start(str, '0', TRUE);
-	      str = *str == '\0' ? str_cat("0", "", FALSE) : str;
-	      str = str_cat(str0, str, TRUE);
-	    }
-	  if (!str0)
-	    free(str);
-	}
-    }
-  else
-    {
-      str = str_copy("(nil)");
-    }
-  return (str);
+len = str_len(str);
+new_str = malloc(sizeof(char) * (len + 2));
+if (new_str)
+{
+for (i = 0, j = 0; i < len; i++)
+{
+if (i == pos)
+*(new_str + j++) = c;
+*(new_str + j) = *(str + i);
+j++;
+}
+*(new_str + len + 1) = '\0';
+if (can_free)
+free(str);
+}
+return (new_str);
 }
 
 /**
- * is_invalid - Checks if a given float is invalid
- * @flt_info: The float info struct to check
+ * count_char - Counts the number of copies of a character in a string
+ * @str: The source string
+ * @c: The character to look for
  *
- * Return: NULL if it is valid, otherwise inf or nan
+ * Return: The number of times the character was found
  */
-char *is_invalid(float_info_t *flt_info)
+int count_char(char *str, char c)
 {
-  uchar_t exp_bits_on = 0, exp_all_on;
-  short mant_bits_on = 0;
-  char lsb_on = FALSE, msb_on = FALSE;
-  int i;
+int count = 0, i;
 
-  if (flt_info != NULL)
-    {
-      for (i = 0; *(flt_info->exponent + i) != '\0'; i++)
-	{
-	  if (*(flt_info->exponent + i) == '1')
-	    exp_bits_on++;
-	}
-      exp_all_on = i == exp_bits_on;
-      for (i = 0; *(flt_info->mantissa + i) != '\0'; i++)
-	{
-	  msb_on = i == 0 && *(flt_info->mantissa + i) == '1' ? TRUE : msb_on;
-	  lsb_on = *(flt_info->mantissa + i + 1) == '\0'
-	    && *(flt_info->mantissa + i) == '1' ? TRUE : lsb_on;
-	  if (*(flt_info->mantissa + i) == '1')
-	    mant_bits_on++;
-	}
-      if (exp_all_on)
-	{
-	  if ((flt_info->sign == '0' && mant_bits_on == 0)
-	      || (flt_info->sign == '1' && mant_bits_on == 0))
-	    {
-	      return (str_copy("inf"));
-	    }
-	  else if ((flt_info->sign == '0' && mant_bits_on == 1 && lsb_on)
-		   || (flt_info->sign == '0' && mant_bits_on == 2 && lsb_on && msb_on)
-		   || (flt_info->sign == '0' && mant_bits_on == i))
-	    {
-	      return (str_copy("nan"));
-	    }
-	}
-    }
-  return (NULL);
+for (i = 0; *(str + i) != '\0'; i++)
+count += *(str + i) == c ? 1 : 0;
+return (count);
+}
+
+/**
+ * str_cat - Concatenates two strings
+ * @left: The left string
+ * @right: The right string
+ * @can_free: Specifies if the given strings can be freed
+ *
+ * Return: A pointer to the concatenated string
+ */
+char *str_cat(char *left, char *right, char can_free)
+{
+int left_length = str_len(left);
+int right_length = str_len(right);
+int i;
+char *str;
+
+str = malloc(sizeof(char) * (left_length + right_length + 1));
+if (str)
+{
+for (i = 0; *(left + i) != '\0'; i++)
+*(str + i) = *(left + i);
+for (i = 0; *(right + i) != '\0'; i++)
+*(str + left_length + i) = *(right + i);
+*(str + left_length + i) = '\0';
+}
+if (can_free)
+{
+free(left);
+free(right);
+}
+return (str);
 }

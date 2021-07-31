@@ -1,103 +1,115 @@
-#include <stdarg.h>
 #include <stdio.h>
+#include <stdarg.h>
 #include <stdlib.h>
+#include <string.h>
 #include "holberton.h"
-
 /**
  * convert_fmt_percent - Prints a percent sign (%)
  * @args_list: The arguments list
  * @fmt_info: The format info
+ *
+ * Return: The number of characters written
  */
-void convert_fmt_percent(va_list *args_list, fmt_info_t *fmt_info)
+int convert_fmt_percent(va_list *args_list, fmt_info_t *fmt_info)
 {
-  (void)args_list;
-  _putchar(fmt_info->spec);
+(void)args_list;
+_putchar(fmt_info->spec);
+return (1);
 }
 
 /**
  * convert_fmt_p - Prints the pointer address
  * @args_list: The arguments list
  * @fmt_info: The format info
+ *
+ * Return: The number of characters written
  */
-void convert_fmt_p(va_list *args_list, fmt_info_t *fmt_info)
+int convert_fmt_p(va_list *args_list, fmt_info_t *fmt_info)
 {
-  int i, len;
-  void *ptr = va_arg(*args_list, void *);
-  char *str = ptr_to_str(ptr);
+int i, chars_count = 0, size = 16;
+size_t num = va_arg(*args_list, size_t), tmp;
+char *str;
 
-  (void)fmt_info;
-  if (str)
-    {
-      len = str_len(str);
-      if (!fmt_info->left)
-	{
-	  for (i = 0; i < MAX(len, fmt_info->width) - len; i++)
-	    _putchar(' ');
-	}
-      for (i = 0; *(str + i) != '\0'; i++)
-	_putchar(*(str + i));
-      if (fmt_info->left)
-	{
-	  for (i = 0; i < MAX(len, fmt_info->width) - len; i++)
-	    _putchar(' ');
-	}
-      free(str);
-    }
-  else
-    {
-      _putstr("(nil)");
-      if (str)
-	free(str);
-    }
+(void)fmt_info;
+(void)args_list;
+str = malloc(sizeof(char) * (size));
+if (str)
+{
+mem_set(str, 16, '0');
+tmp = num;
+for (i = 0; i <= size && tmp > 0; i++)
+{
+*(str + i) = (tmp % 16) < 10 ? (tmp % 16) + '0' : (tmp % 16) - 10 + 'a';
+tmp /= 16;
+}
+rev_string(str);
+str = trim_start(str, '0', TRUE);
+_putstr("0x");
+chars_count += 2;
+for (i = 0; i < size; i++)
+{
+_putchar(*(str + i));
+chars_count++;
+}
+free(str);
+}
+return (chars_count);
 }
 
 /**
  * convert_fmt_c - Prints a character
  * @args_list: The arguments list
  * @fmt_info: The format info
+ *
+ * Return: The number of characters written
  */
-void convert_fmt_c(va_list *args_list, fmt_info_t *fmt_info)
+int convert_fmt_c(va_list *args_list, fmt_info_t *fmt_info)
 {
-  int i, len = 1;
-  char str = va_arg(*args_list, int);
+int i, chars_count = 0, len = 1;
+char str = va_arg(*args_list, int);
 
-  if (!fmt_info->left)
-    {
-      for (i = 0; i < MAX(len, fmt_info->width) - len; i++)
-	_putchar(' ');
-    }
-  _putchar(str);
-  if (fmt_info->left)
-    {
-      for (i = 0; i < MAX(len, fmt_info->width) - len; i++)
-	_putchar(' ');
-    }
+if (!fmt_info->left)
+{
+for (i = 0; i < MAX(len, fmt_info->width) - len; i++)
+_putchar(fmt_info->pad);
+}
+_putchar(str == '\0' ? ' ' : str);
+chars_count += MAX(len, fmt_info->width) - len + 1;
+if (fmt_info->left)
+{
+for (i = 0; i < MAX(len, fmt_info->width) - len; i++)
+_putchar(' ');
+}
+return (chars_count);
 }
 
 /**
  * convert_fmt_s - Prints a string
  * @args_list: The arguments list
  * @fmt_info: The format info
+ *
+ * Return: The number of characters written
  */
-void convert_fmt_s(va_list *args_list, fmt_info_t *fmt_info)
+int convert_fmt_s(va_list *args_list, fmt_info_t *fmt_info)
 {
-  int i, len;
-  char *str = va_arg(*args_list, char *);
-  char null_str[] = "(null)";
+int i, chars_count = 0, len;
+char *str = va_arg(*args_list, char *);
+char null_str[] = "(null)";
 
-  str = str ? str : null_str;
-  len = fmt_info->is_precision_set && fmt_info->prec >= 0
-    ? fmt_info->prec : str_len(str);
-  if (!fmt_info->left)
-    {
-      for (i = 0; i < MAX(len, fmt_info->width) - len; i++)
-	_putchar(' ');
-    }
-  for (i = 0; i < len && *(str + i) != '\0'; i++)
-    _putchar(*(str + i));
-  if (fmt_info->left)
-    {
-      for (i = 0; i < MAX(len, fmt_info->width) - len; i++)
-	_putchar(' ');
-    }
+str = str ? str : null_str;
+len = str_len(str);
+if (!fmt_info->left)
+{
+for (i = 0; i < MAX(len, fmt_info->width) - len; i++)
+_putchar(fmt_info->pad);
+}
+chars_count += MAX(len, fmt_info->width) - len;
+_putstr(str);
+chars_count += str_len(str);
+if (fmt_info->left)
+{
+for (i = 0; i < MAX(len, fmt_info->width) - len; i++)
+_putchar(' ');
+}
+return (chars_count);
 }

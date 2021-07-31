@@ -1,141 +1,219 @@
+#include <stdio.h>
+#include <stdarg.h>
 #include <stdlib.h>
+#include <string.h>
 #include "holberton.h"
-
 /**
- * hex_digit - converts a decimal less than 16 to its hexadecimal form
- * @c: The decimal
+ * multiply - Computes the product of a number and a multiple of 10
+ * @num: The first number
+ * @multiple: The second number (a multiple of 10)
  *
- * Return: The hexadecimal digit, otherwise '\0'
+ * Return: A pointer containing the result, otherwise program fails
  */
-char hex_digit(char c)
+char *multiply(char *num, char *multiple)
 {
-  char digits[] = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
-		   'a', 'b', 'c', 'd', 'e', 'f'
-  };
+int size, mult_len, num_len, i, j;
+char *result, rem, carry = 0;
 
-  return (c >= 0 && c <= 15 ? *(digits + c) : '\0');
+mult_len = str_len(multiple);
+num_len = str_len(num);
+size = mult_len + num_len;
+result = malloc(sizeof(char) * (size + 1));
+if (result != NULL)
+{
+mem_set(result, size, '0');
+*(result + size) = '\0';
+mult_len--;
+j = size - mult_len - 1;
+for (i = 1; i <= mult_len; i++)
+*(result + size - i) = '0';
+for (i = num_len - 1; i >= 0; i--)
+{
+if (!(*(num + i) >= '0' && *(num + i) <= '9'))
+break;
+if (!(*multiple >= '0' && *multiple <= '9'))
+break;
+rem = ((*(num + i) - '0') * (*multiple - '0') + carry) % 10;
+carry = ((*(num + i) - '0') * (*multiple - '0') + carry) / 10;
+*(result + j) = rem + '0';
+j--;
+}
+if (carry > 0)
+*(result + j) = carry + '0';
+return (result);
+}
+return (NULL);
 }
 
 /**
- * cmp_nums - Compares the left number to the right number
- * @left: The left number
- * @right: The right number
+ * add_int - Adds two positive integers
+ * @left: The first number
+ * @right: The second number
+ * @can_free: Specifies whether the given numbers can be freed
  *
- * Return: 1 if left is > right, -1 if left < right, otherwise 0
+ * Return: The sum of the two integers, otherwise NULL
  */
-char cmp_nums(char *left, char *right)
+char *add_int(char *left, char *right, int can_free)
 {
-  char *num1 = left;
-  char *num2 = right;
-  int len1 = str_len(num1) - 1, len2 = str_len(num2) - 1, i = 0;
+int i, size, len1, len2;
+char dig1, dig2, carry, rem, *result;
 
-  for (i = 0; (*(num1 + i) == '0' && *(num1 + i + 1) != '\0') && i < len1; i++)
-    ;
-  num1 = num1 + i;
-  len1 = str_len(num1);
-  for (i = 0; (*(num2 + i) == '0' && *(num2 + i + 1) != '\0') && i < len2; i++)
-    ;
-  num2 = num2 + i;
-  len2 = str_len(num2);
-  if (len1 > len2)
-    {
-      return (1);
-    }
-  else if (len1 < len2)
-    {
-      return (-1);
-    }
-  else
-    {
-      for (i = 0; i < len1; i++)
-	{
-	  if (*(num1 + i) > *(num2 + i))
-	    return (1);
-	  if (*(num1 + i) < *(num2 + i))
-	    return (-1);
-	}
-      return (0);
-    }
+len1 = str_len(left);
+len2 = str_len(right);
+size = MAX(len1, len2) + 1;
+result = malloc(sizeof(char) * (size + 1));
+if (result)
+{
+mem_set(result, size, '0');
+carry = 0;
+i = size - 1;
+len1--;
+len2--;
+for (; i >= 0; i--)
+{
+dig1 = len1 >= 0 ? *(left + len1) -'0' : 0;
+dig2 = len2 >= 0 ? *(right + len2) -'0' : 0;
+rem = (dig1 + dig2 + carry) % 10;
+carry = (dig1 + dig2 + carry) / 10;
+*(result + i) = rem + '0';
+len1--;
+len2--;
+}
+*(result + size) = '\0';
+result = trim_start(result, '0', TRUE);
+if (can_free)
+{
+free(left);
+free(right);
+}
+}
+return (result);
 }
 
 /**
- * str_to_int - Converts a string to an int
- * @num: The string to convert
+ * add_float - Adds two positive floating point numbers
+ * @left: The first number
+ * @right: The second number
+ * @can_free: Specifies whether the given numbers can be freed
  *
- * Return: The converted number
+ * Return: The sum of the two floats, otherwise NULL
  */
-int str_to_int(char *num)
+char *add_float(char *left, char *right, char can_free)
 {
-  int i = 1, len, exp = 1;
-  int res = 0;
+char *left_c = str_copy(left);
+char *right_c = str_copy(right);
+int len1, len2, dec_pos1, dec_pos2, frac_len1, frac_len2, size;
+char *sum;
 
-  len = str_len(num);
-  for (i = len - 1; i >= 0; i--)
-    {
-      if (*(num + i) == '-')
-	res *= -1;
-      else if (is_digit(*(num + i)))
-	{
-	  res += (*(num + i) - '0') * exp;
-	  exp *= 10;
-	}
-    }
-  return (res);
+len1 = str_len(left_c);
+len2 = str_len(right_c);
+dec_pos1 = index_of(left_c, '.');
+dec_pos2 = index_of(right_c, '.');
+frac_len1 = len1 - (dec_pos1 + 1);
+frac_len2 = len2 - (dec_pos2 + 1);
+if (frac_len1 < frac_len2)
+left_c = append_char(left_c, '0', frac_len2 - frac_len1, TRUE);
+if (frac_len2 < frac_len1)
+right_c = append_char(right_c, '0', frac_len1 - frac_len2, TRUE);
+size = MAX(len1, len2);
+sum = malloc(sizeof(char) * (size + 1));
+if (sum)
+{
+mem_set(sum, size, '0');
+left_c = delete_char(left_c, '.', TRUE);
+right_c = delete_char(right_c, '.', TRUE);
+sum = add_int(left_c, right_c, TRUE);
+size = str_len(sum);
+sum = insert_char(sum, size - MAX(frac_len1, frac_len2), '.', TRUE);
+if (can_free)
+{
+free(left);
+free(right);
+}
+}
+return (sum);
 }
 
 /**
- * bin_to_int - Converts an array of bits to an int
- * @bin_str: The array of bits
+ * mul_int - Computes the product of two positive integers
+ * @left: The first number
+ * @right: The second number
+ * @can_free: Specifies whether the given numbers can be freed
  *
- * Return: The decimal equivalent of the array of bits
+ * Return: The product of the two numbers, otherwise NULL
  */
-int bin_to_int(char *bin_str)
+char *mul_int(char *left, char *right, char can_free)
 {
-  int len = str_len(bin_str);
-  int i;
-  int exp = 1;
-  int result = 0;
+char *result, *product;
+int size, i, len2;
 
-  for (i = len - 1; i >= 0 && *(bin_str + i) != '\0'; i--)
-    {
-      if (*(bin_str + i) == '0' || *(bin_str + i) == '1')
-	{
-	  result += (*(bin_str + i) - '0') * exp;
-	  exp *= 2;
-	}
-    }
-  return (result);
+size = str_len(left);
+len2 = str_len(right);
+size += len2;
+result = malloc(sizeof(char) * (size + 1));
+if (result != NULL)
+{
+mem_set(result, size, '0');
+*(result + size) = '\0';
+for (i = 0; i < len2; i++)
+{
+product = multiply(left, right + i);
+result = add_int(product, result, TRUE);
+}
+while (*result == '0' && *(result + 1) != '\0')
+left_shift(result, size);
+if (can_free)
+{
+free(left);
+free(right);
+}
+}
+return (result);
 }
 
 /**
- * long_to_oct - Converts a long integer to its octal representation
- * @num: The number to convert
+ * mul_float - Computes the product of two positive floats
+ * @left: The first number
+ * @right: The second number
+ * @can_free: Specifies whether the given numbers can be freed
  *
- * Return: The octal representation of the number, otherwise NULL
+ * Return: The product of the two floats, otherwise NULL
  */
-char *long_to_oct(unsigned long num)
+char *mul_float(char *left, char *right, char can_free)
 {
-  int i = 0, size = num == 0 ? 2 : 21;
-  unsigned long num_c = num;
-  char *str;
+char *left_c = str_copy(left);
+char *right_c = str_copy(right);
+int len1, len2, dec_pos1, dec_pos2, frac_len1, frac_len2, size, old_size;
+char *product;
 
-  str = malloc(sizeof(char) * (size));
-  if (str)
-    {
-      mem_set(str, size, 0);
-      if (num == 0)
-	{
-	  *(str + i) = '0';
-	  return (str);
-	}
-      for (i = 0; i <= size; i++)
-	{
-	  *(str + i) = (num_c % 8) + '0';
-	  num_c /= 8;
-	}
-      rev_string(str);
-      str = trim_start(str, '0', TRUE);
-      str = num == 0 ? str_cat("0", "", FALSE) : str;
-    }
-  return (str);
+len1 = str_len(left_c);
+len2 = str_len(right_c);
+dec_pos1 = index_of(left_c, '.');
+dec_pos2 = index_of(right_c, '.');
+frac_len1 = len1 - (dec_pos1 + 1);
+frac_len2 = len2 - (dec_pos2 + 1);
+if (frac_len1 < frac_len2)
+left_c = append_char(left_c, '0', frac_len2 - frac_len1, TRUE);
+if (frac_len2 < frac_len1)
+right_c = append_char(right_c, '0', frac_len1 - frac_len2, TRUE);
+size = MAX(len1, len2);
+product = malloc(sizeof(char) * (size + 1));
+if (product)
+{
+mem_set(product, size, '0');
+left_c = delete_char(left_c, '.', TRUE);
+right_c = delete_char(right_c, '.', TRUE);
+old_size = size - 1;
+product = mul_int(left_c, right_c, TRUE);
+size = str_len(product) - old_size;
+product = insert_char(product,
+size - MAX(frac_len1, frac_len2) + 1, '.', TRUE);
+product = trim_end(product, '0', TRUE);
+if (can_free)
+{
+free(left);
+free(right);
+}
+}
+return (product);
 }
