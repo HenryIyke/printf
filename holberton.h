@@ -10,15 +10,21 @@
 #ifndef NULL
 #define NULL ((void *)0)
 #endif
+#ifndef MAX_WIDTH
 #define MAX_WIDTH "2147483647"
+#endif
+#ifndef MAX
 #define MAX(a, b) ((a) > (b) ? (a) : (b))
-#define MIN(a, b) ((a) < (b) ? (a) : (b))
+#endif
+#ifndef ABS
 #define ABS(a) ((a) > (0) ? (a) : (0 - (a)))
-#define NO_NEG(a) ((a) < (0) ? (0) : ((a)))
-#define NO_LESS(a, b) ((a) < (b) ? (b) : ((a)))
+#endif
+#ifndef TO_UPPER
 #define TO_UPPER(c) ((c) >= 'a' && (c) <= 'z' ? (c) - 6 - 26 : (c))
+#endif
+#ifndef TO_LOWER
 #define TO_LOWER(c) ((c) >= 'A' && (c) <= 'Z' ? (c) + 6 + 26 : (c))
-#define FMT_PREC_EMPTY(fmt_inf) (fmt_inf->is_precision_set && !fmt_inf->prec)
+#endif
 
 /**
  * struct format_info - Contains information about the options
@@ -42,22 +48,22 @@
  */
 struct format_info
 {
-  int prec;
-  int width;
-  char spec;
-  char is_long_double;
-  char is_long;
-  char is_long_long;
-  char is_short;
-  char is_char;
-  char is_precision_set;
-  char is_width_set;
-  char alt;
-  char space;
-  char left;
-  char show_sign;
-  char group;
-  char pad;
+int prec;
+int width;
+char spec;
+char is_long_double;
+char is_long;
+char is_long_long;
+char is_short;
+char is_char;
+char is_precision_set;
+char is_width_set;
+char alt;
+char space;
+char left;
+char show_sign;
+char group;
+char pad;
 };
 typedef struct format_info fmt_info_t;
 /**
@@ -68,8 +74,8 @@ typedef struct format_info fmt_info_t;
  */
 struct spec_printer
 {
-  char spec;
-  void (*print_arg)(va_list *args, fmt_info_t *fmt_info);
+char spec;
+int (*print_arg)(va_list *args, fmt_info_t *fmt_info);
 };
 typedef struct spec_printer spec_printer_t;
 typedef unsigned char uchar_t;
@@ -83,9 +89,9 @@ typedef unsigned short ushort_t;
  */
 struct float_info
 {
-  char sign;
-  char *exponent;
-  char *mantissa;
+char sign;
+char *exponent;
+char *mantissa;
 };
 typedef struct float_info float_info_t;
 
@@ -94,14 +100,7 @@ int _putchar(char c);
 int _putstr(char *str);
 int write_to_buffer(char c, char action);
 int _printf(const char *format, ...);
-void write_format(va_list *args_list, fmt_info_t *fmt_info);
-
-
-void print_repeat(char c, int n);
-void _putnchars(int n, ...);
-char is_letter(char c);
-void set_format_error(const char *, int *, int len, int, int *);
-void put_num(int zeros_count, long num, char *str);
+int write_format(va_list *args_list, fmt_info_t *fmt_info);
 
 
 void init_format_info(fmt_info_t *spec);
@@ -111,28 +110,27 @@ void free_float_info(float_info_t *flt_info);
 
 
 int set_number(const char *str, int *number);
-void set_length(char cur, int *pos, fmt_info_t *fmt_info);
-int set_flags(const char *str, fmt_info_t *fmt_info);
+void set_length(char cur, char nxt, fmt_info_t *fmt_info);
+void set_flags(char cur, fmt_info_t *fmt_info);
 void set_precision(const char *str, va_list args,
-		   fmt_info_t *fmt_info, int *i, int *error_status);
-int read_format_info(const char *, va_list, fmt_info_t *, int *);
+fmt_info_t *fmt_info, int *i, int *error_status);
+int read_format_info(const char *, va_list, fmt_info_t *);
 
 
-void convert_fmt_percent(va_list *args_list, fmt_info_t *fmt_info);
-void convert_fmt_p(va_list *args_list, fmt_info_t *fmt_info);
-void convert_fmt_c(va_list *args_list, fmt_info_t *fmt_info);
-void convert_fmt_s(va_list *args_list, fmt_info_t *fmt_info);
+int convert_fmt_percent(va_list *args_list, fmt_info_t *fmt_info);
+int convert_fmt_p(va_list *args_list, fmt_info_t *fmt_info);
+int convert_fmt_c(va_list *args_list, fmt_info_t *fmt_info);
+int convert_fmt_s(va_list *args_list, fmt_info_t *fmt_info);
 
-void convert_fmt_di(va_list *args_list, fmt_info_t *fmt_info);
-/* void convert_fmt_fF(va_list *args_list, fmt_info_t *fmt_info); */
-void convert_fmt_xX(va_list *args_list, fmt_info_t *fmt_info);
-void convert_fmt_o(va_list *args_list, fmt_info_t *fmt_info);
-void convert_fmt_u(va_list *args_list, fmt_info_t *fmt_info);
+int convert_fmt_di(va_list *args_list, fmt_info_t *fmt_info);
+int convert_fmt_xX(va_list *args_list, fmt_info_t *fmt_info);
+int convert_fmt_o(va_list *args_list, fmt_info_t *fmt_info);
+int convert_fmt_u(va_list *args_list, fmt_info_t *fmt_info);
 
-void convert_fmt_b(va_list *args_list, fmt_info_t *fmt_info);
-void convert_fmt_R(va_list *args_list, fmt_info_t *fmt_info);
-void convert_fmt_r(va_list *args_list, fmt_info_t *fmt_info);
-void convert_fmt_S(va_list *args_list, fmt_info_t *fmt_info);
+int convert_fmt_b(va_list *args_list, fmt_info_t *fmt_info);
+int convert_fmt_R(va_list *args_list, fmt_info_t *fmt_info);
+int convert_fmt_r(va_list *args_list, fmt_info_t *fmt_info);
+int convert_fmt_S(va_list *args_list, fmt_info_t *fmt_info);
 
 
 int str_len(char *str);
@@ -169,16 +167,14 @@ char *div_by_10_exp(char *num, unsigned short n, char can_free);
 char *two_exp(short n);
 char *five_exp(unsigned short n);
 unsigned int two_pexp(unsigned int n);
-char *u_long_to_hex(unsigned long num, char upper);
 
 
 char *u_long_to_str(unsigned long num);
 char *long_to_str(long num);
-char *ptr_to_str(void *ptr);
 char *is_invalid(float_info_t *flt_info);
 
-void set_float_parts(double num,uchar_t exponent_size,
-		     uchar_t mantissa_size, float_info_t *float_info);
+void set_float_parts(double num, uchar_t exponent_size,
+uchar_t mantissa_size, float_info_t *float_info);
 char *mantissa_to_dec_fraction(char *mantissa, unsigned short frac_len);
 char *float_to_str(float_info_t *flt_info, char can_free);
 
